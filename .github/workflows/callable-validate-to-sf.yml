@@ -1,0 +1,53 @@
+name: Callable Validate to Salesforce
+run-name: Callable Validate to Salesforce
+on:
+  workflow_call:
+    inputs:
+      repository:
+        required: true
+        type: string
+      base-ref:
+        required: true
+        type: string
+      head-ref:
+        required: true
+        type: string
+jobs:
+  validate-against-scratch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Use GitHub Actions Checkout v4
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ inputs.repository }}
+      # - name: Use GitHub Actions Node v3
+      #   uses: actions/setup-node@v3
+      #   with:
+      #     node-version: "18"
+      # - name: Check node version
+      #   run: node -v
+      # - name: Install sfdx
+      #   run: npm install @salesforce/cli --global
+      # - name: Check sfdx version
+      #   run: sfdx -v
+      # - name: Install SGD
+      #   run: echo y | sf plugins install sfdx-git-delta
+      # - name: Create package manifest
+      #   run: |
+      #     BASE="origin/${{ github.base_ref}}"
+      #     echo BASE $BASE
+      #     HEAD="origin/${{ github.head_ref}}"
+      #     echo HEAD $HEAD
+      #     git fetch --all
+      #     sf sgd source delta --to origin/${{ github.head_ref}} --from origin/${{ github.base_ref}} --source force-app --output manifest
+      # - name: Print package manifest
+      #   run: cat manifest/package/package.xml
+      # - name: Print destructive changes manifest
+      #   run: cat manifest/destructiveChanges/destructiveChanges.xml
+      # - name: Authorize org
+      #   run: |
+      #     echo ${{ secrets.SFDXURL }} > org.sfdxurl
+      #     sf org login sfdx-url -a test-org -s -f org.sfdxurl
+      # - name: Validate against org
+      #   run: |
+      #     sf project deploy start --dry-run --ignore-warnings -o test-org -x manifest/package/package.xml --post-destructive-changes=manifest/destructiveChanges/destructiveChanges.xml
